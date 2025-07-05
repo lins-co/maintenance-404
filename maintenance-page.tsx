@@ -5,32 +5,30 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Clock, Sparkles, Zap } from "lucide-react"
 
-export default function Component() {
-  const [timeLeft, setTimeLeft] = useState({
-    hours: 0,
-    minutes: 0,
-    seconds: 0,
-  })
+export default function Component({ launchDate }: { launchDate: string }) {
+  const [timeLeft, setTimeLeft] = useState({ hours: 0, minutes: 0, seconds: 0 })
 
   useEffect(() => {
-    // Set target time to 24 hours from now
-    const targetTime = new Date().getTime() + 24 * 60 * 60 * 1000
+    const targetTime = new Date(launchDate).getTime();
 
     const timer = setInterval(() => {
-      const now = new Date().getTime()
-      const difference = targetTime - now
+      const now = new Date().getTime();
+      const difference = targetTime - now;
 
       if (difference > 0) {
         setTimeLeft({
           hours: Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
           minutes: Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60)),
           seconds: Math.floor((difference % (1000 * 60)) / 1000),
-        })
+        });
+      } else {
+        setTimeLeft({ hours: 0, minutes: 0, seconds: 0 });
+        clearInterval(timer);
       }
-    }, 1000)
+    }, 1000);
 
-    return () => clearInterval(timer)
-  }, [])
+    return () => clearInterval(timer);
+  }, [launchDate]);
 
   return (
     <>
